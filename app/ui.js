@@ -951,6 +951,15 @@ const UI = {
     clipboardReceive(e) {
         Log.Debug(">> UI.clipboardReceive: " + e.detail.text.substr(0, 40) + "...");
         document.getElementById('noVNC_clipboard_text').value = e.detail.text;
+        // Add customization to directly copy text to system clipboard
+        // Please be noted that:
+        // This requires a secure origin - either HTTPS or localhost (or disable by running Chrome with a flag)
+        navigator.clipboard.writeText(e.detail.text)
+            .then(
+                ()=>{ Log.Debug("copy!"); } 
+            ).catch(
+                ()=>{ Log.Debug("error!"); } 
+            );
         Log.Debug("<< UI.clipboardReceive");
     },
 
