@@ -323,8 +323,7 @@ const UI = {
     addClipboardHandlers() {
         document.getElementById("noVNC_clipboard_button")
             .addEventListener('click', UI.toggleClipboardPanel);
-        document.getElementById("noVNC_clipboard_text")
-            .addEventListener('change', UI.clipboardSend);
+	window.addEventListener('focus', UI.clipboardSend);
         document.getElementById("noVNC_clipboard_clear_button")
             .addEventListener('click', UI.clipboardClear);
     },
@@ -969,10 +968,15 @@ const UI = {
     },
 
     clipboardSend() {
-        const text = document.getElementById('noVNC_clipboard_text').value;
-        Log.Debug(">> UI.clipboardSend: " + text.substr(0, 40) + "...");
-        UI.rfb.clipboardPasteFrom(text);
-        Log.Debug("<< UI.clipboardSend");
+	navigator.clipboard.readText()
+            .then(text => {
+                Log.Debug("<< UI.clipboardReceive");
+                Log.Debug(">> UI.clipboardSend: " + text.substr(0, 40) + "...");
+                UI.rfb.clipboardPasteFrom(text);
+                Log.Debug("<< UI.clipboardSend");
+	    }).catch(e => { 
+          	Log.Debug("error!");
+	    });
     },
 
 /* ------^-------
